@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import asyncio
 import hashlib
+import logging
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -30,6 +31,8 @@ from .const import (
     PURIFIER_MODES,
     PURIFIER_STATUS_MODES,
 )
+
+_LOGGER = logging.getLogger(__name__)
 
 BYPASS_ENDPOINT = "/cloud/v2/deviceManaged/bypassV2"
 # Candidate algorithm from pyvesync PR #532. Kept local to the new purifiers.
@@ -321,6 +324,9 @@ class ExtendedClient:
                         raise ApiError("Invalid device list item")
                     model = item.get("deviceType")
                     if model not in PURIFIER_MODELS | HUMIDIFIER_MODELS:
+                        # Model strings are not identifiers; logging them lets
+                        # users report the exact cloud type of unsupported units.
+                        _LOGGER.debug("Skipping unsupported device type %r", model)
                         continue
                     cid = item.get("cid") or item.get("uuid") or item.get("macID")
                     config = item.get("configModule")

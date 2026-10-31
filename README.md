@@ -32,7 +32,7 @@ status and a command acknowledgment issue corrected in 0.1.3.
 | Product | VeSync cloud identifier | Readings and candidate controls |
 | --- | --- | --- |
 | Vital Pet Pro air purifier | `LAP-P501S-WUSR`, `LAP-P501S-AUSR` | Power, three speeds, manual/auto/sleep/pet, PM2.5, filter life, display, child lock |
-| NeoClassic 450S cool-mist humidifier | `LUH-N451S-WUS` | Power, manual/auto/sleep, current and target humidity, display, mist-level reading, tunable-white night light, saved L1/L2 readings |
+| NeoClassic 450S cool-mist humidifier | `LUH-N451S-WUS`, `LUH-N451S-WEU` (EU, unverified) | Power, manual/auto/sleep, current and target humidity, display, mist-level reading, tunable-white night light, saved L1/L2 readings |
 
 Product labels may omit the region suffix. The integration matches the identifier
 returned by the cloud, rather than assuming that similarly named products share a protocol.

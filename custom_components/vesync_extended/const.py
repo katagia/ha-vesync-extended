@@ -8,7 +8,9 @@ PLATFORMS = ["fan", "humidifier", "light", "sensor", "switch"]
 MIN_LIGHT_KELVIN = 1700
 MAX_LIGHT_KELVIN = 5500
 PURIFIER_MODELS = frozenset({"LAP-P501S-WUSR", "LAP-P501S-AUSR"})
-HUMIDIFIER_MODELS = frozenset({"LUH-N451S-WUS"})
+# LUH-N451S-WEU: EU variant reported in issue #1; status/commands assumed
+# identical to the US unit until verified on real hardware.
+HUMIDIFIER_MODELS = frozenset({"LUH-N451S-WUS", "LUH-N451S-WEU"})
 SUPPORTED_MODELS = PURIFIER_MODELS | HUMIDIFIER_MODELS
 PURIFIER_MODES = ("manual", "auto", "sleep", "pet")
 HUMIDIFIER_MODES = ("manual", "auto", "sleep")

@@ -438,3 +438,48 @@ async def test_humidifier_write_uses_put_without_purifier_signature():
     method, url, request = session.calls[0]
     assert method == "put" and url.startswith("https://smartapi.vesync.eu/")
     assert "_packFileSignature" not in request["headers"]
+
+
+EU_HUMIDIFIER = Device("test-eu", "Test EU humidifier", "LUH-N451S-WEU", "test-h", "EU")
+
+
+async def test_eu_humidifier_is_discovered_and_uses_eu_endpoint():
+    session = FakeSession(
+        {
+            "code": 0,
+            "result": {
+                "list": [
+                    {
+                        "cid": EU_HUMIDIFIER.cid,
+                        "deviceType": EU_HUMIDIFIER.model,
+                        "configModule": "test-h",
+                        "deviceRegion": "EU",
+                    }
+                ]
+            },
+        },
+        {
+            "code": 0,
+            "result": {
+                "code": 0,
+                "result": {
+                    "powerSwitch": 1,
+                    "workMode": "auto",
+                    "humidity": 45,
+                    "targetHumidity": 55,
+                },
+            },
+        },
+    )
+    client = ExtendedClient(make_manager(region="EU"), session)
+    devices = await client.discover()
+    device = devices[EU_HUMIDIFIER.cid]
+    assert not device.is_purifier and device.region == "EU"
+    state = await client.get_state(device)
+    assert state.humidity == 45 and state.target_humidity == 55
+    assert all(call[1].startswith("https://smartapi.vesync.eu") for call in session.calls)
+    assert "_packFileSignature" not in session.calls[1][2]["headers"]
+    assert command_payload(device, "humidity", 60) == (
+        "setTargetHumidity",
+        {"targetHumidity": 60, "id": 0},
+    )
